@@ -9,9 +9,7 @@ def normalise_string(input_text):
 
     ''' Normalise text for matching purposes. '''
 
-    normed = unidecode.unidecode(str(input_text).lower()).strip()
-
-    return normed
+    return unidecode.unidecode(str(input_text).lower()).strip()
 
 def median_score(a_list, b_id, f, b_data):
 
