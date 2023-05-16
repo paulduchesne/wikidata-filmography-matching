@@ -1,19 +1,19 @@
 [
     {
         "agent_id": "agent_001",
-        "agent_label": "Rolf De Heer",
+        "agent_label": "ROLF DE HEER",
         "filmography": [
             {
                 "film_id": "film_001",
-                "film_label": "Dance Me To My Song"
+                "film_label": "DANCE ME TO MY SONG"
             },
             {
                 "film_id": "film_002",
-                "film_label": "Bad Boy Bubby"
+                "film_label": "BAD BOY BUBBY"
             },
             {
                 "film_id": "film_003",
-                "film_label": "Alexandras Project"
+                "film_label": "ALEXANDRAS PROJECT"
             }
         ]
     }
