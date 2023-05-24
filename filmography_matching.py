@@ -15,7 +15,7 @@ def median_score(a_list, b_id, f, b_data):
 
     ''' Score the candidate based on median title match. '''
 
-    test = b_data.loc[b_data.director_id.isin([b_id])]
+    test = b_data.loc[b_data.agent_id.isin([b_id])]
     b_list = [normalise_string(x) for x in test.film_label.unique()]
     if len(a_list) < f or len(b_list) < 4:
         return 0
@@ -37,13 +37,13 @@ def match_process(x, name_match_score=60,
         wikidata_data = pandas.read_parquet(wikidata_path)
     wikidata_data = wikidata_data.applymap(normalise_string)
             
-    c = process.extract(normalise_string(x['agent_label']), wikidata_data.director_label.unique(), scorer=fuzz.WRatio, limit=200)
+    c = process.extract(normalise_string(x['agent_label']), wikidata_data.agent_label.unique(), scorer=fuzz.WRatio, limit=200)
     c = [y[0] for y in c if y[1] > name_match_score]
 
-    candidates = wikidata_data.loc[wikidata_data.director_label.isin(c)]
+    candidates = wikidata_data.loc[wikidata_data.agent_label.isin(c)]
 
     result = dict()
-    for y in candidates.director_id.unique():
+    for y in candidates.agent_id.unique():
         source_filmography = [normalise_string(z['film_label']) for z in x['filmography']]
         score = median_score(source_filmography, y, minimum_match_candidates, candidates)
         result[y] = score

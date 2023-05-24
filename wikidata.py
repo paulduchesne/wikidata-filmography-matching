@@ -27,19 +27,20 @@ wikidata_path = pathlib.Path.cwd() / 'wikidata.parquet'
 if not wikidata_path.exists():
     wikidata = pandas.DataFrame()
     for year in tqdm.tqdm(range(1880, 2025)):
-        query = '''select ?film ?filmLabel ?title ?director ?directorLabel (year(?publication_date) as ?year) 
+        query = '''select ?film ?filmLabel ?title ?agent ?agentLabel (year(?publication_date) as ?year) 
             where {
                 ?film p:P31/wdt:P279* ?state .
                 ?state ps:P31/wdt:P279* wd:Q11424 .
                 ?film  wdt:P577 ?publication_date .
                 filter (year(?publication_date) = '''+str(year)+''') .
-                ?film wdt:P57 ?director
+                ?film ?activity ?agent .
+                ?agent wdt:P31 wd:Q5 .
                 optional { ?film wdt:P1476 ?title } .
                 service wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }}'''
         extract = sparql_query(query, "https://query.wikidata.org/sparql")
         wikidata = pandas.concat([wikidata, extract])
 
-    for x in ['film', 'director']:
+    for x in ['film', 'agent']:
         wikidata[x] = wikidata[x].str.split('/').str[-1]
 
     wikidata = pandas.concat([
@@ -48,7 +49,7 @@ if not wikidata_path.exists():
         ]).dropna().drop_duplicates()
 
     wikidata = wikidata.rename(columns={
-        'film':'film_id', 'director':'director_id', 'title':'film_label', 'directorLabel':'director_label'})
+        'film':'film_id', 'agent':'agent_id', 'title':'film_label', 'agentLabel':'agent_label'})
     
     wikidata = wikidata.astype(str)
     wikidata.to_parquet(wikidata_path)
